@@ -24,11 +24,6 @@ app.get('/', (req, res) => {
     })
 })
 
-app.post('/signin-process',(req, res) => {
-
-    res.send(req.body)
-})
-
 app.get('/signin', (req, res) => {
     var body = ""
     fs.readFile('./views/login/signin.html','utf8',(err,data)=>{
@@ -43,5 +38,13 @@ app.get('/signup', (req, res) => {
         body = data
         res.send(body)
     })
+})
+
+app.post('/signup',(req, res) => {
+    fs.writeFile("/users",req.body,(err)=>{
+        if (err) throw err;
+        console.log('The file has been saved!')
+    })
+    res.redirect('/')
 })
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
