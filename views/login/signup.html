@@ -6,7 +6,6 @@
     <title>회원가입</title>
 </head>
 <body>
- 
     <h1>회원가입</h1>
     <form action="/signup" method="POST">
         <input name="id" type="text" placeholder="아이디">
@@ -15,6 +14,31 @@
         <input name="nickname" type="text" placeholder="닉네임">
         <input type="submit" value="제출하기" >
     </form>
+    <script>
+        function check(e){
+            var id = document.querySelector("input[name=id]")
+            var pw = document.querySelector("input[name=password]")
+            var pw_check = document.querySelector("input[name=password-check]")
+            var nickname = document.querySelector("input[name=nickname]")
 
+            if (id.value == "" || pw.value == "" || pw_check.value == "" || nickname.value == ""){
+                e.preventDefault()
+                alert("빈칸이 있음")
+            } else if (pw.value != pw_check.value){
+                e.preventDefault()
+                alert("비밀번호가 일치하지 않음")
+            } else if(id.value.length < 4 || id.value.length > 12){
+                e.preventDefault()
+                alert("아이디는 4~12자리 입니다.")
+            } else if(pw.value.length < 4 || pw.value.length > 12){
+                e.preventDefault()
+                alert("비밀번호는 4~12자리 입니다.")
+            } else {
+                alert("회원 가입 성공")
+            }
+        }
+        var submit = document.querySelector("input[type=submit]")
+        submit.addEventListener('click',check)
+    </script>
 </body>
 </html>

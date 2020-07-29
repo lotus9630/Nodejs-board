@@ -32,6 +32,22 @@ app.get('/signin', (req, res) => {
     })
 })
 
+app.post('/signin', (req, res) => {
+    var id = req.body.id
+    var pw = req.body.password
+    fs.readFile(`./users-list/${id}`,'utf8',(err,data)=>{
+        var body = JSON.parse(data)
+        console.log(body.password)
+        console.log(pw)
+        if (body.id == id && body.password == pw){
+            res.redirect('/')
+        } else {
+            res.send("<h1>Login Fail</h1><a href='/'>메인 페이지</a><a href='/signin'>로그인 페이지</a>")
+        }
+    })
+})
+
+
 app.get('/signup', (req, res) => {
     var body = ""
     fs.readFile('./views/login/signup.html','utf8',(err,data)=>{
@@ -41,7 +57,8 @@ app.get('/signup', (req, res) => {
 })
 
 app.post('/signup',(req, res) => {
-    fs.writeFile("/users",req.body,(err)=>{
+    var data = JSON.stringify(req.body)
+    fs.writeFile(`./users-list/${req.body.id}`, data ,(err)=>{
         if (err) throw err;
         console.log('The file has been saved!')
     })
