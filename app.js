@@ -5,18 +5,20 @@ const fs = require('fs')
 const session = require('express-session');
 const FileStore = require('session-file-store')(session); // 1
 const bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 
-app.use(session({  // 2
-  secret: 'keyboard cat',  // 암호화
-  resave: false,
-  saveUninitialized: true,
-  store: new FileStore()
-}));
+app.use(session({
+    secret: 'asadlfkj!@#!@#dfgasdg',
+    resave: false,
+    saveUninitialized: true,
+    store:new FileStore()
+}))
 
 app.get('/', (req, res) => {
-
+    
     var body = ""
     fs.readFile('./views/main.html','utf8',(err,data)=>{
         body = data
@@ -35,16 +37,8 @@ app.get('/signin', (req, res) => {
 app.post('/signin', (req, res) => {
     var id = req.body.id
     var pw = req.body.password
-    fs.readFile(`./users-list/${id}`,'utf8',(err,data)=>{
-        var body = JSON.parse(data)
-        console.log(body.password)
-        console.log(pw)
-        if (body.id == id && body.password == pw){
-            res.redirect('/')
-        } else {
-            res.send("<h1>Login Fail</h1><a href='/'>메인 페이지</a><a href='/signin'>로그인 페이지</a>")
-        }
-    })
+    var id_list = []
+    res.send("Login page")
 })
 
 
@@ -63,5 +57,9 @@ app.post('/signup',(req, res) => {
         console.log('The file has been saved!')
     })
     res.redirect('/')
+})
+
+app.get('/create',(req, res) => {
+    res.send()
 })
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
