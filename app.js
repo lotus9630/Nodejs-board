@@ -226,7 +226,7 @@ app.delete('/delete/:title', (req, res) => {
 
 })
 
-app.get('/signin', (req, res) => {
+app.get('/signin', (req, res) => { // 로그인 창 
     var body = ""
     fs.readFile('./views/login/signin.html','utf8',(err,data)=>{
         body = data
@@ -270,7 +270,7 @@ app.get('/signup', (req, res) => { // 회원 가입 폼 요청
 })
 
 app.post('/signup',(req, res) => { // 회원가입 정보 DB에 저장 
-    var body = req.body
+    var body = req.body // 회원정보 객체 id/ pw / nickname 
     var id = body.id
     var pw = ""
     var salt = ""
@@ -278,10 +278,12 @@ app.post('/signup',(req, res) => { // 회원가입 정보 DB에 저장
 
     connection.query(`select * from user_list where id=${id} or nickname=${nickname}`,function(error,results){
         console.log(results)
-        if(results != undefined){
+        if(results[0] != undefined){
+            console.log(0)
             connection.end()
             res.redirect('/signup_fail')
         } else {
+            console.log(1)
             crypto.randomBytes(10, (err, buf) => {
                 crypto.pbkdf2(body.pw, buf.toString('base64'), 100000, 10, 'sha512', (err, key) => {
                   salt = buf.toString('base64')
@@ -290,7 +292,6 @@ app.post('/signup',(req, res) => { // 회원가입 정보 DB에 저장
                     if (error) {
                         throw(error)
                     } else {
-                        connection.end();
                         res.redirect("/")
                     };
                   });
@@ -317,4 +318,4 @@ app.get('/logout',(req,res)=>{ // 로그아웃
     });
 })
 
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
+app.listen(port)
